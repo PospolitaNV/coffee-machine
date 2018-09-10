@@ -5,9 +5,10 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Coffeemaker CM = new Coffeemaker();
-        Printer Pr = new Printer();
-        Scanner num = new Scanner(System.in);
+        // Названия всех переменных некорректны
+        CoffeeMaker CM = new CoffeeMaker(); // переменные именуются с маленькой буквы
+        Printer Pr = new Printer(); // не используется в коде
+        Scanner scanner = new Scanner(System.in); // название переменной не отражает суть
         int i = 0;
 
         CM.startMashine();
@@ -27,16 +28,20 @@ public class Main {
 
 
             while (true)
+                // обработка ввода не делается на исключениях. Есть методы сканнера:
+                // scanner.hasNextInt(); или scanner.hasNext("паттерн");
+                // К тому же у тебя разный текст обработки ошибок при вводе строки и при вводе большого числа
                 try {
-                    i = Integer.parseInt(num.nextLine());
+                    i = Integer.parseInt(scanner.nextLine());
                     break;
                 } catch (NumberFormatException nfe) {
+                    //Нет разделения ответственности. У тебя же есть класс Printer
                     System.out.println("Некорректный ввод !");
                     System.out.println("Введите рецепт из списка ниже или завершите работу с системой набрав <8>.");
                 }
 
 
-            int button = i;
+            int button = i; // почему бы не избавиться от "i", она выглядит бесполезной
 
             switch (button) {
                 case 0:
@@ -57,6 +62,7 @@ public class Main {
                         CM.DontMakeCoffee();
                         CM.InquiryAvaliableReceipt();
                     break;
+                // как только добавится 8ой вид кофе - код здесь придётся переписать. и ВЕЗДЕ, где ты пишешь "<8>"
                 case 8:
                         System.out.println("Всего доброго, надеюсь Вам понравился мой кофе ...");
                     break;
@@ -64,9 +70,11 @@ public class Main {
                         System.out.println("Вход в сервисный режим ...");
                     break;
                 default: {
+                    //Нет разделения ответственности. У тебя же есть класс Printer
                     System.out.println("Некорректный ввод !");
                     System.out.println("Введите рецепт из списка ниже или завершите работу с системой.");
                     System.out.println();
+
                     CM.InquiryAvaliableReceipt();
                 }
             }
@@ -75,9 +83,7 @@ public class Main {
 
 
 
-        } while (i!= 8);
-
-
+        } while (i != 8);
     }
 }
 

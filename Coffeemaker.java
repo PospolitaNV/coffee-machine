@@ -1,7 +1,9 @@
 package com.github.npospolita;
 
-public class Coffeemaker {
-    Printer Pr = new Printer();
+import java.util.Collections;
+
+public class CoffeeMaker { // имя класса в CamelCase
+    Printer printer = new Printer(); // переменная с маленькой буквы, обычно без сокращений
 
         /*
         Вносим данные о рецептах кофе в формате - кофе/вода/молоко/ в массив, где
@@ -13,6 +15,15 @@ public class Coffeemaker {
             возможно приготовить из имеющихся на данный момент аргументов.
         */
 
+    /**
+     * Весь код ниже - Receipts, NameOfCoffee - это прямые кандидаты на новый класс. Т.к. сейчас для добавления нового кофе придётся менять код.
+     * В CoffeeMaker-е можно сделать конструктор с передачей возможных рецептов. и их параметрами.
+     * Таким образом можно сделать инициализацию при запуске, а не переписывая код каждый раз.
+     *
+     * Поля - вода, кофе, молоко, имя рецепта. Класс Receipt
+     *
+     * Вместо arr[][] млжно использовать HashMap<Integer, Receipt> или HashMap<String, Receipt>
+     */
     int Receipts[][] = {
             {0, 10, 50, 0, 0}, //0 - Эспрессо    10/50
             {1, 20, 100, 0, 0}, //1 - Доппио      20/100
@@ -36,6 +47,7 @@ public class Coffeemaker {
     };
 
     // Создаем массив с данными об остатках компонентов в резервуарах
+    // Возможно стоит сделать внутренний класс или отдельный с использованием композиции.
     int Reservuar[] = {
             200,  //кофе, в граммах
             3000,  //вода, в мл
@@ -61,8 +73,8 @@ public class Coffeemaker {
     }
 
     //Выводит в консоль все доступные к приготовлению рецепты
-    public void OutListAllAvaliableReceipts() {
-        boolean j = false;
+    public void OutListAllAvaliableReceipts() { // не используется
+        boolean j = false;// не используется
         int ActRcpt = 0;
         System.out.println("Доступность рецептов :");
         for (int i = 0; i <= 7; i++) {
@@ -93,7 +105,7 @@ public class Coffeemaker {
 
     // Запрос выбора доступного рецепта
     public void InquiryAvaliableReceipt() {
-        boolean j = false;
+        boolean j = false; // не используется
         int ActRcpt = 0;
         System.out.println("Доступные рецепты :");
         for (int i = 0; i <= 7; i++) {
@@ -103,9 +115,10 @@ public class Coffeemaker {
             }
         }
         if (ActRcpt != 0) {
+            // в Printer
             System.out.println();
             System.out.println("Выберите напиток,введите его номер, и нажмите <Enter> !");
-            System.out.println("Нажмите <8> для завершения сеанса работы !");
+            System.out.println("Нажмите <8> для завершения сеанса работы !"); // завязка на цифру 8 делает код каменным, если ты убираешь или добавляешь кофе
             System.out.println();
             System.out.print(">>");
         } else {
@@ -117,13 +130,14 @@ public class Coffeemaker {
 
     // Метод определяет доступность рецепта к изготовлению в данный момент и
     // заносит в массив рецептов в последнюю переменную "статус" - сколько чашек можно приготовить сейчас
+    // название метода с маленькой буквы
     public void SetActiveReceipts() {
-        int k, w, m = 0;
-        for (int i = 0; i <= 7; i++) {
+        int k, w, m = 0; // не говорящие переменные
+        for (int i = 0; i <= 7; i++) { // завязка на цифру 7 - "магическое число". нужна переменная
             if (Receipts[i][1] != 0)
                 k = (Reservuar[0] / Receipts[i][1]);
             else
-                k = 1000;
+                k = 1000; // волшебное число. лучше Integer.MAX_VALUE
 
             if (Receipts[i][2] != 0)
                 w = (Reservuar[1] / Receipts[i][2]);
@@ -135,9 +149,10 @@ public class Coffeemaker {
             else
                 m = 1000;
 
-            if ((k >= 0) & (w >= 0) & (m >= 0)) {
+            if ((k >= 0) & (w >= 0) & (m >= 0)) { // 1 - это условие всегда верное. 2 - "&" побитовая операция, надо использовать && (хоть это и работает)
                 // Определяем какого ингредиента меньше всего для рецепта,
                 // следовательно, получаем минимальное кол-во готовых чашек
+                // Receipts[i][4] = Math.min(Math.min(k,w), m)
                 if (k < w)
                     if (k < m)
                         Receipts[i][4] = k; //Заносим минимальное количество готовых чашек в статус рецепта
@@ -154,6 +169,7 @@ public class Coffeemaker {
     }
 
     //Приготовление кофе - ДРАФТ!!!!!
+    // название метода с маленькой буквы
     public void MakeCoffee(int Receipt_N) {
         Reservuar[0] = Reservuar[0] - Receipts[Receipt_N][1];
         Reservuar[1] = Reservuar[1] - Receipts[Receipt_N][2];
@@ -161,22 +177,27 @@ public class Coffeemaker {
 
         System.out.println("");
         System.out.print("Идет приготовление кофе - " + NameOfCoffee[Receipt_N] + " ");
-        Pr.DotsCooking();
+        printer.DotsCooking();
         System.out.println();
         System.out.println("Ваш " + NameOfCoffee[Receipt_N] + " готов!");
         System.out.println();
     }
 
     //Статус остатков
+    // название метода с маленькой буквы
     public boolean TestAvaliabilityIngredients(int Receipt_N) {
 //            boolean TestAvaliabilityIngredients = false;
         if (Receipts[Receipt_N][4] != 0)
             return true;
         else
             return false;
+
+        // просто return Receipts[Receipt_N][4] != 0;
     }
 
     // Не делать кофе , не из чего
+    // название метода с маленькой буквы
+    // есть класс Printer
     public void DontMakeCoffee() {
         System.out.println();
         System.out.print("ВНИМАНИЕ !");
